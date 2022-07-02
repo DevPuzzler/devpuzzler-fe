@@ -4,8 +4,20 @@ import Home from '../views/Home.vue';
 const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
-    name: 'Home',
+    name: 'home',
     component: Home,
+    children: [
+      {
+        path: '/blogpost',
+        name: 'blogpost',
+        component: () => import('@/layouts/BlogPost.vue'),
+      },
+      {
+        path: '/random',
+        name: 'random',
+        component: () => import('@/layouts/Random.vue'),
+      },
+    ],
   },
   {
     path: '/about',

@@ -1,18 +1,71 @@
 <template>
   <div class="home">
-    <img alt="Vue logo" src="../assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+    <Header />
+    <router-view v-slot="{ Component }">
+      <transition name="slide">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+<!--    <label>-->
+<!--      <input type="radio" v-model="activeComponent" :value="BlogPostCollection"> A-->
+<!--    </label>-->
+<!--    <label>-->
+<!--      <input type="radio" v-model="activeComponent" :value="BlogPost"> B-->
+<!--    </label>-->
+<!--    <Transition-->
+<!--      name="fade"-->
+<!--      mode="out-in"-->
+<!--      enter-active-class="animate__animated animate__zoomIn"-->
+<!--      leave-active-class="animate__animated animate__zoomOut"-->
+<!--    >-->
+<!--      <component :is="activeComponent"></component>-->
+<!--    </Transition>-->
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from '@/components/HelloWorld.vue'; // @ is an alias to /src
+import { defineComponent, shallowRef } from 'vue';
+import Header from '@/layouts/Header.vue';
+import BlogPostCollection from '@/layouts/BlogPostCollection.vue';
+import Timeline from '@/layouts/Timeline.vue';
+import BlogPost from '@/layouts/BlogPost.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
-    HelloWorld,
+    Header,
+    BlogPostCollection,
+  },
+  setup() {
+    const activeComponent = shallowRef(Timeline);
+    return {
+      activeComponent,
+      Timeline,
+      BlogPost,
+    };
   },
 });
 </script>
+
+<style scoped>
+.slide-enter-active,
+.slide-leave-active {
+  transition: all 0.75s ease-out;
+}
+.slide-enter-to {
+  position: absolute;
+  right: 0;
+}
+.slide-enter-from {
+  position: absolute;
+  right: -100%;
+}
+.slide-leave-to {
+  position: absolute;
+  left: -100%;
+}
+.slide-leave-from {
+  position: absolute;
+  left: 0;
+}
+</style>
