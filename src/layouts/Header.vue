@@ -13,7 +13,8 @@
             <ul class="nav justify-content-center offset-2 col-8">
               <li class="nav-item">
                 <router-link
-                  class="nav-link light-text fw-bold" :to="{name: 'home'}">Home</router-link>
+                  class="nav-link light-text fw-bold" :to="{name: 'blog-post-collection'}">
+                  Home</router-link>
               </li>
               <li class="nav-item">
                 <router-link

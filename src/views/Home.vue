@@ -2,24 +2,15 @@
   <div class="home">
     <Header />
     <router-view v-slot="{ Component }">
-      <transition name="slide">
+      <transition
+        name="fade"
+        mode="out-in"
+        enter-active-class="animate__animated animate__zoomIn"
+        leave-active-class="animate__animated animate__zoomOut"
+      >
         <component :is="Component" />
       </transition>
     </router-view>
-<!--    <label>-->
-<!--      <input type="radio" v-model="activeComponent" :value="BlogPostCollection"> A-->
-<!--    </label>-->
-<!--    <label>-->
-<!--      <input type="radio" v-model="activeComponent" :value="BlogPost"> B-->
-<!--    </label>-->
-<!--    <Transition-->
-<!--      name="fade"-->
-<!--      mode="out-in"-->
-<!--      enter-active-class="animate__animated animate__zoomIn"-->
-<!--      leave-active-class="animate__animated animate__zoomOut"-->
-<!--    >-->
-<!--      <component :is="activeComponent"></component>-->
-<!--    </Transition>-->
   </div>
 </template>
 

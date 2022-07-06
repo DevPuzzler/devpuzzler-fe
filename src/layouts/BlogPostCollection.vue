@@ -1,13 +1,19 @@
 <template>
   <section>
+    <h2>The newest shit</h2>
+    <Timeline />
   </section>
 </template>
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import Timeline from '@/layouts/Timeline.vue';
 
 export default defineComponent({
   name: 'blog-post-collection',
+  components: {
+    Timeline,
+  },
 });
 </script>
 

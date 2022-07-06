@@ -8,6 +8,11 @@ const routes: Array<RouteRecordRaw> = [
     component: Home,
     children: [
       {
+        path: '',
+        name: 'blog-post-collection',
+        component: () => import('@/layouts/BlogPostCollection.vue'),
+      },
+      {
         path: '/blogpost',
         name: 'blogpost',
         component: () => import('@/layouts/BlogPost.vue'),
