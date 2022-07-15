@@ -2,9 +2,7 @@
   <section id="newest-blog-posts">
     <h1>NEWEST</h1>
     <template v-if="blogPosts.length">
-      <ul>
-        <li v-for="blogPost in blogPosts" :key="blogPost.id">{{ blogPost.name }}</li>
-      </ul>
+      <BlogPostsCollection :blogPosts="blogPosts" />
     </template>
   </section>
 </template>
@@ -12,14 +10,18 @@
 <script lang="ts">
 import { defineComponent, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
-import { BlogPost } from '@/store/modules/BlogPostModule';
+import { BlogPost as BlogPostInterface } from '@/store/modules/BlogPostModule';
 import { Actions, Getters } from '@/store/enums/StoreEnums';
+import BlogPostsCollection from '@/components/BlogPost/BlogPostsCollection.vue';
 
 export default defineComponent({
   name: 'blog-post-newest',
+  components: {
+    BlogPostsCollection,
+  },
   setup() {
     const store = useStore();
-    const blogPosts = ref<Array<BlogPost>>([]);
+    const blogPosts = ref<Array<BlogPostInterface>>([]);
     onMounted(async () => {
       setTimeout(async () => { // TODO: REMOVE AFTER ADDING LOADER
         await store.dispatch(Actions.FETCH_NEWEST_BLOG_POSTS);

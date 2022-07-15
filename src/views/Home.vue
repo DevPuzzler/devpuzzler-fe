@@ -19,7 +19,7 @@ import { defineComponent, shallowRef } from 'vue';
 import Header from '@/layouts/Header.vue';
 import BlogPostCollection from '@/layouts/BlogPostCollection.vue';
 import Timeline from '@/layouts/Timeline.vue';
-import BlogPost from '@/layouts/BlogPost.vue';
+import BlogPost from '@/layouts/BlogPostLayout.vue';
 
 export default defineComponent({
   name: 'Home',

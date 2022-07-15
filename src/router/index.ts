@@ -15,7 +15,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '/blogpost',
         name: 'blogpost',
-        component: () => import('@/layouts/BlogPost.vue'),
+        component: () => import('@/layouts/BlogPostLayout.vue'),
       },
       {
         path: '/random',

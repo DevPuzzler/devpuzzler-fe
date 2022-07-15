@@ -1,6 +1,7 @@
 import { Actions, Mutations, Getters } from '@/store/enums/StoreEnums';
 
 export interface BlogPost {
+  id: number,
   name: string,
   excerpt: string,
   categoryId: number,
@@ -35,6 +36,13 @@ export default {
           id: 2,
           name: 'sample second',
           excerpt: 'some excerpt second',
+          content: '<h1>sample second content</h1>',
+          category_id: 1,
+        },
+        {
+          id: 3,
+          name: 'sample third',
+          excerpt: 'some excerpt third',
           content: '<h1>sample second content</h1>',
           category_id: 1,
         },
