@@ -13,6 +13,7 @@
 import { defineComponent, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
 import { BlogPost } from '@/store/modules/BlogPostModule';
+import { Actions, Getters } from '@/store/enums/StoreEnums';
 
 export default defineComponent({
   name: 'blog-post-newest',
@@ -21,8 +22,8 @@ export default defineComponent({
     const blogPosts = ref<Array<BlogPost>>([]);
     onMounted(async () => {
       setTimeout(async () => { // TODO: REMOVE AFTER ADDING LOADER
-        await store.dispatch('fetchNewestBlogPosts');
-        blogPosts.value = store.getters.getNewestBlogPosts;
+        await store.dispatch(Actions.FETCH_NEWEST_BLOG_POSTS);
+        blogPosts.value = store.getters[Getters.GET_NEWEST_BLOG_POSTS];
         console.log('blog posts', blogPosts.value);
       }, 2000);
     });

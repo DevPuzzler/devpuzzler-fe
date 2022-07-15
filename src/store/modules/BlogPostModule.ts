@@ -1,3 +1,5 @@
+import { Actions, Mutations, Getters } from '@/store/enums/StoreEnums';
+
 export interface BlogPost {
   name: string,
   excerpt: string,
@@ -14,15 +16,14 @@ export default {
     newestBlogPosts: [],
   }),
   mutations: {
-    setNewestBlogPosts(state: State, blogPosts: []): void {
-      console.log('in setting', blogPosts);
+    [Mutations.SET_NEWEST_BLOG_POSTS](state: State, blogPosts: []): void {
       state.newestBlogPosts = blogPosts;
     },
   },
   actions: {
-    fetchNewestBlogPosts({ commit }: any): void {
+    [Actions.FETCH_NEWEST_BLOG_POSTS]({ commit }: any): void {
       // TODO: fetch data via request
-      commit('setNewestBlogPosts', [
+      commit(Mutations.SET_NEWEST_BLOG_POSTS, [
         {
           id: 1,
           name: 'sample name',
@@ -41,7 +42,7 @@ export default {
     },
   },
   getters: {
-    getNewestBlogPosts(state: State): Array<any> {
+    [Getters.GET_NEWEST_BLOG_POSTS](state: State): Array<any> {
       return state.newestBlogPosts;
     },
   },

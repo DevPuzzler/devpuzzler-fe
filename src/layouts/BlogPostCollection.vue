@@ -6,7 +6,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import BlogPostNewest from '@/layouts/BlogPost/BlogPostNewest.vue';
+import BlogPostNewest from '@/layouts/BlogPost/NewestBlogPosts.vue';
 
 export default defineComponent({
   name: 'blog-post-collection',
