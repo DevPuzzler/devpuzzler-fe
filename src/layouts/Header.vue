@@ -13,22 +13,22 @@
             <ul class="nav justify-content-center offset-2 col-8">
               <li class="nav-item">
                 <router-link
-                  class="nav-link light-text fw-bold" :to="{name: 'blog-post-collection'}">
+                  class="nav-link text-white fw-bold" :to="{name: 'blog-post-collection'}">
                   Home</router-link>
               </li>
               <li class="nav-item">
                 <router-link
-                  class="nav-link light-text fw-bold" :to="{name: 'blogpost'}">Post</router-link>
+                  class="nav-link text-white fw-bold" :to="{name: 'blogpost'}">Post</router-link>
               </li>
               <li class="nav-item">
                 <router-link
-                  class="nav-link light-text fw-bold" :to="{name: 'random'}">Random</router-link>
+                  class="nav-link text-white fw-bold" :to="{name: 'random'}">Random</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link light-text fw-bold" to="/">Opinionated</router-link>
+                <router-link class="nav-link text-white fw-bold" to="/">Opinionated</router-link>
               </li>
               <li class="nav-item">
-                <router-link class="nav-link light-text fw-bold" to="/">Articles</router-link>
+                <router-link class="nav-link text-white fw-bold" to="/">Articles</router-link>
               </li>
             </ul>
         </div>

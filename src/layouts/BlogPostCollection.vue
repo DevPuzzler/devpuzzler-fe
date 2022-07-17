@@ -1,6 +1,7 @@
 <template>
   <section>
     <BlogPostNewest />
+    <AnimatedDivider />
     <ShortBlogPosts />
   </section>
 </template>
@@ -9,12 +10,14 @@
 import { defineComponent } from 'vue';
 import BlogPostNewest from '@/layouts/BlogPost/NewestBlogPosts.vue';
 import ShortBlogPosts from '@/layouts/BlogPost/ShortBlogPosts.vue';
+import AnimatedDivider from '@/components/Common/AnimatedDivider.vue';
 
 export default defineComponent({
   name: 'blog-post-collection',
   components: {
     BlogPostNewest,
     ShortBlogPosts,
+    AnimatedDivider,
   },
 });
 </script>

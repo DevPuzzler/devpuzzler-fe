@@ -4,30 +4,3 @@
   min-height: 100vh;
 }
 
-a {
-
-  &.light-text {
-    color: white !important;
-  }
-
-  &.nav-link {
-
-    &:after {
-      display: block;
-      content: '';
-      border-bottom: solid 3px #019fb6;
-      transform: scaleX(0);
-      transition: transform 250ms ease-in-out;
-    }
-
-    &:hover:after {
-      transform: scaleX(1);
-    }
-
-  }
-
-}
-
-
-
-

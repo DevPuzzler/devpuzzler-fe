@@ -1,6 +1,6 @@
 <template>
   <section id="blogPostsNewest" class="blog-posts newest mt-4">
-    <h2 class="text-white">NEWEST</h2>
+    <BlogPostTitle blogPostTitle="Newest Posts"/>
     <template v-if="blogPosts.length">
       <BlogPostsCollection :blogPosts="blogPosts" />
     </template>
@@ -13,11 +13,13 @@ import { useStore } from 'vuex';
 import { BlogPost as BlogPostInterface } from '@/store/modules/BlogPostModule';
 import { Actions, Getters } from '@/store/enums/StoreEnums';
 import BlogPostsCollection from '@/components/BlogPost/BlogPostsCollection.vue';
+import BlogPostTitle from '@/components/BlogPost/BlogPostTitle.vue';
 
 export default defineComponent({
   name: 'blog-post-newest',
   components: {
     BlogPostsCollection,
+    BlogPostTitle,
   },
   setup() {
     const store = useStore();
