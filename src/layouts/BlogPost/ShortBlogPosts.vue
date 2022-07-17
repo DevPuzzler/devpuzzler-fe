@@ -1,6 +1,6 @@
 <template>
-  <section id="blogPostsNewest" class="blog-posts newest mt-4">
-    <h2 class="text-white">NEWEST</h2>
+  <section id="blogPostsNewest" class="blog-posts short-tips mt-4">
+    <h2 class="text-white">Short tips</h2>
     <template v-if="blogPosts.length">
       <BlogPostsCollection :blogPosts="blogPosts" />
     </template>
@@ -23,6 +23,7 @@ export default defineComponent({
     const store = useStore();
     const blogPosts = ref<Array<BlogPostInterface>>([]);
     onMounted(async () => {
+      // TODO Make correct call once it is ready for that
       setTimeout(async () => { // TODO: REMOVE AFTER ADDING LOADER
         await store.dispatch(Actions.FETCH_NEWEST_BLOG_POSTS);
         blogPosts.value = store.getters[Getters.GET_NEWEST_BLOG_POSTS];

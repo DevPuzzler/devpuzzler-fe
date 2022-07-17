@@ -1,11 +1,13 @@
 <template>
   <template v-if="blogPosts.length">
-    <div class="container d-flex flex-wrap justify-content-around">
-    <BlogPost
-        v-for="blogPost in blogPosts"
-        :blogPost="blogPost"
-        :key="blogPost.id"
-      />
+    <div class="container d-flex flex-column">
+      <div class="row flex-wrap justify-content-center">
+        <BlogPost
+            v-for="blogPost in blogPosts"
+            :blogPost="blogPost"
+            :key="blogPost.id"
+          />
+      </div>
     </div>
   </template>
 </template>
