@@ -1,5 +1,11 @@
 <template>
-  <b class="divider"></b>
+  <div class="container">
+    <div class="row">
+      <div class="col-6 offset-3">
+        <b class="divider"></b>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
