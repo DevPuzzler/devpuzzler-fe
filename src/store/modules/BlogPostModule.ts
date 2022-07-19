@@ -49,8 +49,9 @@ export default {
   },
   actions: {
     async [Actions.FETCH_NEWEST_BLOG_POSTS]({ commit }: any,
-      limit = 3, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includeCategory = false): Promise<void> {
-      console.log('limit, offset, orderBy, sortOrder, includeCategory', limit, offset, orderBy, sortOrder, includeCategory);
+      {
+        limit = 6, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includeCategory = false,
+      }: GetRequestParameters): Promise<void> {
       return axios.get(`${process.env.VUE_APP_API_URL}/api/posts?orderBy=${orderBy}&sortOrder=${sortOrder}&includeCategory=${includeCategory}&limit=${limit}&offset=${offset}`)
         .then(({ data }) => data)
         .then((blogPostsResponse: BlogPostApiResponse): void => {
@@ -61,8 +62,9 @@ export default {
         });
     },
     [Actions.FETCH_SHORT_BLOG_POSTS]({ commit }: any,
-      limit = 3, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includeCategory = false): void {
-      console.log('limit, offset, orderBy, sortOrder, includeCategory', limit, offset, orderBy, sortOrder, includeCategory);
+      {
+        limit = 6, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includeCategory = false,
+      }: GetRequestParameters): void {
       axios.get(`${process.env.VUE_APP_API_URL}/api/posts?orderBy=${orderBy}&sortOrder=${sortOrder}&includeCategory=${includeCategory}&limit=${limit}&offset=${offset}`)
         .then(({ data }) => data)
         .then((blogPostsResponse: BlogPostApiResponse): void => {

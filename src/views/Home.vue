@@ -17,22 +17,18 @@
 <script lang="ts">
 import { defineComponent, shallowRef } from 'vue';
 import Header from '@/layouts/Header.vue';
-import BlogPostCollection from '@/layouts/BlogPostCollection.vue';
-import Timeline from '@/layouts/Timeline.vue';
-import BlogPost from '@/layouts/BlogPostLayout.vue';
+import BlogPostsLayout from '@/layouts/BlogPostsLayout.vue';
 
 export default defineComponent({
   name: 'Home',
   components: {
     Header,
-    BlogPostCollection,
+    BlogPostsLayout,
   },
   setup() {
-    const activeComponent = shallowRef(Timeline);
+    const activeComponent = shallowRef(BlogPostsLayout);
     return {
       activeComponent,
-      Timeline,
-      BlogPost,
     };
   },
 });

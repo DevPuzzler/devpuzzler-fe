@@ -10,7 +10,7 @@ const routes: Array<RouteRecordRaw> = [
       {
         path: '',
         name: 'blog-post-collection',
-        component: () => import('@/layouts/BlogPostCollection.vue'),
+        component: () => import('@/layouts/BlogPostsLayout.vue'),
       },
       {
         path: '/blogpost',

@@ -1,5 +1,5 @@
 <template>
-  <div class="loader">
+  <div class="loader" :class="loaderClasses">
     <p class="text">{{ text }}</p>
     <span class="dot no1"></span>
     <span class="dot no2"></span>
@@ -18,6 +18,7 @@ export default defineComponent({
   name: 'loader',
   props: {
     text: { type: String, default: 'Loading' },
+    loaderClasses: { type: String, default: '', required: false },
   },
 });
 </script>
