@@ -1,6 +1,6 @@
 <template>
   <section id="blogPostsNewest" class="blog-posts newest mt-4">
-    <template v-if="blogPosts.length && isContentLoaded">
+    <template v-if="blogPosts && blogPosts.length && isContentLoaded">
       <BlogPostTitle blogPostTitle="Newest Posts"/>
       <BlogPostsCollection :blogPosts="blogPosts" />
     </template>
@@ -9,9 +9,10 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, ref } from 'vue';
+import {
+  defineComponent, onMounted, ref, computed,
+} from 'vue';
 import { useStore } from 'vuex';
-import { BlogPost as BlogPostInterface } from '@/store/modules/BlogPostModule';
 import { Actions, Getters } from '@/store/enums/StoreEnums';
 import BlogPostsCollection from '@/components/BlogPost/BlogPostsCollection.vue';
 import BlogPostTitle from '@/components/BlogPost/BlogPostTitle.vue';
@@ -26,17 +27,16 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
-    const blogPosts = ref<Array<BlogPostInterface>>([]);
     const isContentLoaded = ref<boolean>(false);
     onMounted(async () => {
-      setTimeout(async () => { // TODO: TO BE REMOVED AFTER TESTING
-        await store.dispatch(Actions.FETCH_NEWEST_BLOG_POSTS);
-        blogPosts.value = store.getters[Getters.GET_NEWEST_BLOG_POSTS];
-        isContentLoaded.value = true;
-        console.log('blog posts', blogPosts.value);
-      }, 4000);
+      await store.dispatch(Actions.FETCH_NEWEST_BLOG_POSTS);
+      isContentLoaded.value = true;
     });
-    return { blogPosts, isContentLoaded };
+    return {
+      blogPosts: computed(() => store.getters[Getters.GET_NEWEST_BLOG_POSTS]),
+      isContentLoaded,
+    };
   },
+
 });
 </script>

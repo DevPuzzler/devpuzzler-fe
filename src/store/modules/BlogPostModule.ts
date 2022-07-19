@@ -1,4 +1,5 @@
 import { Actions, Mutations, Getters } from '@/store/enums/StoreEnums';
+import axios from 'axios';
 
 export interface BlogPost {
   id: number,
@@ -8,71 +9,76 @@ export interface BlogPost {
   content: string
 }
 
-export interface State {
+export interface BlogPostsState {
   newestBlogPosts: Array<BlogPost>;
+  shortBlogPosts: Array<BlogPost>;
+}
+
+export interface GetRequestParameters {
+  limit: number,
+  offset: number,
+  orderBy: string,
+  sortOrder: string,
+  includeCategory: boolean,
+}
+
+export interface ApiResponse {
+  success: boolean,
+  data: unknown,
+  errors: string | Array<unknown>
+}
+
+export interface BlogPostApiResponse extends ApiResponse {
+  data: Array<BlogPost>
 }
 
 export default {
-  state: (): State => ({
+  state: (): BlogPostsState => ({
     newestBlogPosts: [],
+    shortBlogPosts: [],
   }),
   mutations: {
-    [Mutations.SET_NEWEST_BLOG_POSTS](state: State, blogPosts: []): void {
+    [Mutations.SET_NEWEST_BLOG_POSTS](state: BlogPostsState, blogPosts: []): void {
+      console.log('set new blog posts', blogPosts);
       state.newestBlogPosts = blogPosts;
+    },
+    [Mutations.SET_SHORT_BLOG_POSTS](state: BlogPostsState, blogPosts: []): void {
+      console.log('short blog posts', blogPosts);
+      state.shortBlogPosts = blogPosts;
     },
   },
   actions: {
-    [Actions.FETCH_NEWEST_BLOG_POSTS]({ commit }: any): void {
-      // TODO: fetch data via request
-      commit(Mutations.SET_NEWEST_BLOG_POSTS, [
-        {
-          id: 1,
-          name: 'sample name',
-          excerpt: 'some excerpt some excerpt some excerpt some excerpt',
-          content: '<h1>sample 1 content </h1>',
-          category_id: 1,
-        },
-        {
-          id: 2,
-          name: 'sample second',
-          excerpt: 'some excerpt second some excerpt second some excerpt second',
-          content: '<h1>sample second content</h1>',
-          category_id: 1,
-        },
-        {
-          id: 3,
-          name: 'sample third',
-          excerpt: 'some excerpt third some excerpt third some excerpt third some excerpt third',
-          content: '<h1>sample this content</h1>',
-          category_id: 1,
-        },
-        {
-          id: 4,
-          name: 'sample fourth',
-          excerpt: 'some excerpt fourth some excerpt fourth some excerpt fourth some excerpt fourth some excerpt fourth',
-          content: '<h1>sample fourth content</h1>',
-          category_id: 1,
-        },
-        {
-          id: 5,
-          name: 'sample fifth',
-          excerpt: 'some excerpt fifth',
-          content: '<h1>sample fifth content</h1>',
-          category_id: 1,
-        },
-        {
-          id: 6,
-          name: 'sample sixth',
-          excerpt: 'some excerpt sixth some excerpt sixth some excerpt sixth some excerpt sixth some excerpt sixth some excerpt sixth',
-          content: '<h1>sample sixth content</h1>',
-          category_id: 1,
-        },
-      ]);
+    async [Actions.FETCH_NEWEST_BLOG_POSTS]({ commit }: any,
+      limit = 3, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includeCategory = false): Promise<void> {
+      console.log('limit, offset, orderBy, sortOrder, includeCategory', limit, offset, orderBy, sortOrder, includeCategory);
+      return axios.get(`${process.env.VUE_APP_API_URL}/api/posts?orderBy=${orderBy}&sortOrder=${sortOrder}&includeCategory=${includeCategory}&limit=${limit}&offset=${offset}`)
+        .then(({ data }) => data)
+        .then((blogPostsResponse: BlogPostApiResponse): void => {
+          commit(Mutations.SET_NEWEST_BLOG_POSTS, blogPostsResponse.data);
+        })
+        .catch((response) => {
+          console.log('error response new blog posts', response);
+        });
+    },
+    [Actions.FETCH_SHORT_BLOG_POSTS]({ commit }: any,
+      limit = 3, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includeCategory = false): void {
+      console.log('limit, offset, orderBy, sortOrder, includeCategory', limit, offset, orderBy, sortOrder, includeCategory);
+      axios.get(`${process.env.VUE_APP_API_URL}/api/posts?orderBy=${orderBy}&sortOrder=${sortOrder}&includeCategory=${includeCategory}&limit=${limit}&offset=${offset}`)
+        .then(({ data }) => data)
+        .then((blogPostsResponse: BlogPostApiResponse): void => {
+          commit(Mutations.SET_SHORT_BLOG_POSTS, blogPostsResponse.data);
+        })
+        .catch((response) => {
+          console.log('error response short blog posts', response);
+        });
     },
   },
   getters: {
-    [Getters.GET_NEWEST_BLOG_POSTS](state: State): Array<any> {
+    [Getters.GET_NEWEST_BLOG_POSTS](state: BlogPostsState): Array<BlogPost> {
       return state.newestBlogPosts;
+    },
+    [Getters.GET_SHORT_BLOG_POSTS](state: BlogPostsState): Array<BlogPost> {
+      return state.shortBlogPosts;
     },
   },
 };
