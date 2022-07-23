@@ -1,5 +1,6 @@
 import { Actions, Mutations, Getters } from '@/store/enums/StoreEnums';
 import axios from 'axios';
+import { ApiResponse, GetRequestParameters } from '@/store/modules/ApiModule';
 
 export interface BlogPost {
   id: number,
@@ -14,22 +15,16 @@ export interface BlogPostsState {
   shortBlogPosts: Array<BlogPost>;
 }
 
-export interface GetRequestParameters {
-  limit: number,
-  offset: number,
-  orderBy: string,
-  sortOrder: string,
-  includeCategory: boolean,
-}
-
-export interface ApiResponse {
-  success: boolean,
-  data: unknown,
-  errors: string | Array<unknown>
+export interface BlogPostsApiResponse extends ApiResponse {
+  data: Array<BlogPost>
 }
 
 export interface BlogPostApiResponse extends ApiResponse {
-  data: Array<BlogPost>
+  data: BlogPost
+}
+
+export interface GetBlogPostCollectionGetRequestParameters extends GetRequestParameters{
+  includeCategory: boolean,
 }
 
 export default {
@@ -51,10 +46,10 @@ export default {
     async [Actions.FETCH_NEWEST_BLOG_POSTS]({ commit }: any,
       {
         limit = 6, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includeCategory = false,
-      }: GetRequestParameters): Promise<void> {
+      }: GetBlogPostCollectionGetRequestParameters): Promise<void> {
       return axios.get(`${process.env.VUE_APP_API_URL}/api/posts?orderBy=${orderBy}&sortOrder=${sortOrder}&includeCategory=${includeCategory}&limit=${limit}&offset=${offset}`)
         .then(({ data }) => data)
-        .then((blogPostsResponse: BlogPostApiResponse): void => {
+        .then((blogPostsResponse: BlogPostsApiResponse): void => {
           commit(Mutations.SET_NEWEST_BLOG_POSTS, blogPostsResponse.data);
         })
         .catch((response) => {
@@ -64,10 +59,10 @@ export default {
     [Actions.FETCH_SHORT_BLOG_POSTS]({ commit }: any,
       {
         limit = 6, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includeCategory = false,
-      }: GetRequestParameters): void {
+      }: GetBlogPostCollectionGetRequestParameters): void {
       axios.get(`${process.env.VUE_APP_API_URL}/api/posts?orderBy=${orderBy}&sortOrder=${sortOrder}&includeCategory=${includeCategory}&limit=${limit}&offset=${offset}`)
         .then(({ data }) => data)
-        .then((blogPostsResponse: BlogPostApiResponse): void => {
+        .then((blogPostsResponse: BlogPostsApiResponse): void => {
           commit(Mutations.SET_SHORT_BLOG_POSTS, blogPostsResponse.data);
         })
         .catch((response) => {

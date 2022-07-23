@@ -1,6 +1,17 @@
 <template>
   <main id="blogPosts">
 
+    <template v-if="postCategories">
+      <ul>
+        <li
+          v-for="postCategory in postCategories"
+          :key="postCategory.id"
+        >
+          {{ postCategory.name }}
+        </li>
+      </ul>
+    </template>
+
     <template v-if="newestBlogPostsLoaded">
       <section id="newestBlogPosts" class="blog-posts newest mt-4">
         <BlogPostTitle blogPostTitle="Newest Posts"/>
@@ -18,8 +29,6 @@
           <BlogPostTitle blogPostTitle="Short Tips"/>
           <BlogPostsCollection :blogPosts="shortBlogPosts" />
         </section>
-
-        <AnimatedDivider />
 
       </template>
       <Loader v-else text="Loading short tips..." loaderClasses="mt-5" />
@@ -61,11 +70,14 @@ export default defineComponent({
         await store.dispatch(Actions.FETCH_SHORT_BLOG_POSTS, {});
         shortBlogPostsLoaded.value = true;
       }, 1000);
+
+      await store.dispatch(Actions.FETCH_POST_CATEGORIES, {});
     });
     return {
       isNewestBlogPostsLoading,
       newestBlogPostsLoaded,
       shortBlogPostsLoaded,
+      postCategories: computed(() => store.getters[Getters.GET_POST_CATEGORIES]),
       newestBlogPosts: computed(() => store.getters[Getters.GET_NEWEST_BLOG_POSTS]),
       shortBlogPosts: computed(() => store.getters[Getters.GET_SHORT_BLOG_POSTS]),
     };
