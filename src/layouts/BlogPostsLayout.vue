@@ -1,37 +1,40 @@
 <template>
   <main id="blogPosts">
 
-    <template v-if="postCategories">
-      <ul>
-        <li
-          v-for="postCategory in postCategories"
-          :key="postCategory.id"
-        >
-          {{ postCategory.name }}
-        </li>
-      </ul>
+    <template v-if="postCategoriesError">
+      <div class="container mt-5">
+        <div class="row">
+          <div class="col-6 offset-3">
+            <div class="card text-center bg-danger text-white">
+              <div class="card-body">
+                <h2>
+                  Unfortunately, error occurred while fetching posts... <br />
+                  Please, try refreshing page.
+                </h2>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
     </template>
 
-    <template v-if="newestBlogPostsLoaded">
-      <section id="newestBlogPosts" class="blog-posts newest mt-4">
-        <BlogPostTitle blogPostTitle="Newest Posts"/>
-        <BlogPostsCollection :blogPosts="newestBlogPosts" />
-      </section>
-
-      <AnimatedDivider />
-
-    </template>
-    <Loader v-else text="Loading newest posts..." loaderClasses="mt-5"/>
-
-    <template v-if="newestBlogPostsLoaded">
-      <template v-if="shortBlogPostsLoaded">
-        <section id="shortBlogPosts" class="blog-posts short mt-4">
-          <BlogPostTitle blogPostTitle="Short Tips"/>
-          <BlogPostsCollection :blogPosts="shortBlogPosts" />
-        </section>
-
+    <template v-else>
+      <template v-if="postCategories.length">
+        <template v-for="postCategory in postCategories" :key="postCategory.id">
+            <section id="shortBlogPosts" class="blog-posts short mt-4">
+              <h1>{{ postCategory.name }}</h1>
+              <BlogPostsCollection
+                v-if="postCategory.blog_posts?.length"
+                :blogPosts="postCategory.blog_posts"
+              />
+              <AnimatedDivider />
+            </section>
+        </template>
       </template>
-      <Loader v-else text="Loading short tips..." loaderClasses="mt-5" />
+      <template v-else>
+        <Loader text="Loading posts" loaderClasses="mt-5"/>
+      </template>
     </template>
 
   </main>
@@ -39,11 +42,10 @@
 
 <script lang="ts">
 import {
-  computed, defineComponent, onMounted, ref,
+  computed, defineComponent, onMounted,
 } from 'vue';
 import AnimatedDivider from '@/components/Common/AnimatedDivider.vue';
 import BlogPostsCollection from '@/components/BlogPost/BlogPostsCollection.vue';
-import BlogPostTitle from '@/components/BlogPost/BlogPostTitle.vue';
 import { Actions, Getters } from '@/store/enums/StoreEnums';
 import { useStore } from 'vuex';
 import Loader from '@/components/Common/Loader.vue';
@@ -54,32 +56,17 @@ export default defineComponent({
     Loader,
     AnimatedDivider,
     BlogPostsCollection,
-    BlogPostTitle,
   },
   setup() {
     const store = useStore();
-    const isNewestBlogPostsLoading = ref<boolean>(false);
-    const newestBlogPostsLoaded = ref<boolean>(false);
-    const shortBlogPostsLoaded = ref<boolean>(false);
 
     onMounted(async () => {
-      await store.dispatch(Actions.FETCH_NEWEST_BLOG_POSTS, {});
-      newestBlogPostsLoaded.value = true;
-
-      setTimeout(async () => {
-        await store.dispatch(Actions.FETCH_SHORT_BLOG_POSTS, {});
-        shortBlogPostsLoaded.value = true;
-      }, 1000);
-
       await store.dispatch(Actions.FETCH_POST_CATEGORIES, {});
     });
+
     return {
-      isNewestBlogPostsLoading,
-      newestBlogPostsLoaded,
-      shortBlogPostsLoaded,
       postCategories: computed(() => store.getters[Getters.GET_POST_CATEGORIES]),
-      newestBlogPosts: computed(() => store.getters[Getters.GET_NEWEST_BLOG_POSTS]),
-      shortBlogPosts: computed(() => store.getters[Getters.GET_SHORT_BLOG_POSTS]),
+      postCategoriesError: computed(() => store.getters[Getters.GET_POST_CATEGORIES_ERROR]),
     };
   },
 });

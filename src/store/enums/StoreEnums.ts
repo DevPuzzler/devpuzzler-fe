@@ -15,6 +15,7 @@ enum Mutations {
 
   // Post Categories
   SET_POST_CATEGORIES = 'setPostCategories',
+  SET_POST_CATEGORIES_ERROR = 'setPostCategoriesError',
 }
 
 enum Getters {
@@ -24,6 +25,7 @@ enum Getters {
 
   // Post Categories
   GET_POST_CATEGORIES = 'getPostCategories',
+  GET_POST_CATEGORIES_ERROR = 'getPostCategoriesError',
 }
 
 export { Actions, Mutations, Getters };

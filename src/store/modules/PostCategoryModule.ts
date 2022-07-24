@@ -8,7 +8,7 @@ export interface PostCategory {
   name: string,
   description: string,
   createdAt: string,
-  blogPosts: Array<BlogPost>
+  blog_posts: Array<BlogPost>
 }
 
 export interface PostCategoriesApiResponse extends ApiResponse {
@@ -24,17 +24,23 @@ export interface PostCategoryCollectionGetRequestParameters extends GetRequestPa
 }
 
 export interface PostCategoryState {
-  postCategories: Array<PostCategory>
+  postCategories: Array<PostCategory>,
+  error: unknown,
 }
 
 export default {
   state: (): PostCategoryState => ({
     postCategories: [],
+    error: null,
   }),
   mutations: {
     [Mutations.SET_POST_CATEGORIES](state: PostCategoryState, postCategories: []): void {
       console.log('setpostcategories', postCategories);
       state.postCategories = postCategories;
+    },
+    [Mutations.SET_POST_CATEGORIES_ERROR](state: PostCategoryState, error: unknown): void {
+      console.log('state error', error);
+      state.error = error;
     },
   },
   actions: {
@@ -50,12 +56,15 @@ export default {
         })
         .catch((response) => {
           console.log('error response short blog posts', response);
+          commit(Mutations.SET_POST_CATEGORIES_ERROR, response.data);
         });
     },
   },
   getters: {
     [Getters.GET_POST_CATEGORIES](state: PostCategoryState): Array<PostCategory> {
-      return state.postCategories;
+      return state.postCategories.filter(
+        (postCategory: PostCategory) => postCategory.blog_posts?.length
+      );
     },
   },
 };

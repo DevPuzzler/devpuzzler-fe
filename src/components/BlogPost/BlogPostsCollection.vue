@@ -1,5 +1,5 @@
 <template>
-  <template v-if="blogPosts.length">
+  <template v-if="blogPosts?.length">
     <div class="container d-flex flex-column">
       <div class="row flex-wrap justify-content-center">
         <BlogPost

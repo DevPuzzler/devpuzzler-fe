@@ -10,6 +10,10 @@ export interface BlogPost {
   content: string
 }
 
+export interface BlogPostCollection {
+  blogPosts: Array<BlogPost>
+}
+
 export interface BlogPostsState {
   newestBlogPosts: Array<BlogPost>;
   shortBlogPosts: Array<BlogPost>;
