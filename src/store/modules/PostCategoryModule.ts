@@ -2,13 +2,18 @@ import { Actions, Mutations, Getters } from '@/store/enums/StoreEnums';
 import axios from 'axios';
 import { ApiResponse, GetRequestParameters } from '@/store/modules/ApiModule';
 import { BlogPost } from '@/store/modules/BlogPostModule';
+import useArrayHelper from '@/composables/helpers/useArrayHelper';
+import useObjectHelper from '@/composables/helpers/useObjectHelper';
 
-export interface PostCategory {
+const { objectKeysCamelCase } = useObjectHelper();
+const { objectsArrayKeysCamelCase } = useArrayHelper();
+
+export type PostCategory = {
   id: number,
   name: string,
   description: string,
   createdAt: string,
-  blog_posts: Array<BlogPost>
+  blogPosts: Array<BlogPost>
 }
 
 export interface PostCategoriesApiResponse extends ApiResponse {
@@ -36,7 +41,11 @@ export default {
   mutations: {
     [Mutations.SET_POST_CATEGORIES](state: PostCategoryState, postCategories: []): void {
       console.log('setpostcategories', postCategories);
-      state.postCategories = postCategories;
+      state.postCategories = postCategories.map(
+        (postCategory: PostCategory): PostCategory => <PostCategory>objectKeysCamelCase(
+          postCategory,
+        ),
+      );
     },
     [Mutations.SET_POST_CATEGORIES_ERROR](state: PostCategoryState, error: unknown): void {
       console.log('state error', error);
@@ -51,8 +60,18 @@ export default {
       axios.get(`${process.env.VUE_APP_API_URL}/api/posts/categories?orderBy=${orderBy}&sortOrder=${sortOrder}&limit=${limit}&offset=${offset}&include_posts=${includePosts ? 1 : 0}`)
         .then(({ data }) => data)
         .then((postCategoriesResponse: PostCategoriesApiResponse): void => {
-          console.log('blogPostsResponse.data', postCategoriesResponse.data);
-          commit(Mutations.SET_POST_CATEGORIES, postCategoriesResponse.data);
+          const convertedPostCategories = postCategoriesResponse.data.map(
+            (postCategory: PostCategory) => {
+              const convertedPostCategory = <PostCategory>objectKeysCamelCase(postCategory);
+              convertedPostCategory.blogPosts = <BlogPost[]>objectsArrayKeysCamelCase(
+                convertedPostCategory.blogPosts,
+              );
+
+              return convertedPostCategory;
+            },
+          );
+          console.log('convertedPostCategories', convertedPostCategories);
+          commit(Mutations.SET_POST_CATEGORIES, convertedPostCategories);
         })
         .catch((response) => {
           console.log('error response short blog posts', response);
@@ -63,7 +82,7 @@ export default {
   getters: {
     [Getters.GET_POST_CATEGORIES](state: PostCategoryState): Array<PostCategory> {
       return state.postCategories.filter(
-        (postCategory: PostCategory) => postCategory.blog_posts?.length
+        (postCategory: PostCategory) => postCategory.blogPosts?.length,
       );
     },
   },

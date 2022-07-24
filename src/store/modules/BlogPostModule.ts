@@ -2,7 +2,7 @@ import { Actions, Mutations, Getters } from '@/store/enums/StoreEnums';
 import axios from 'axios';
 import { ApiResponse, GetRequestParameters } from '@/store/modules/ApiModule';
 
-export interface BlogPost {
+export type BlogPost = {
   id: number,
   name: string,
   excerpt: string,

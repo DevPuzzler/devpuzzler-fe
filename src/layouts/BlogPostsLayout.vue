@@ -13,7 +13,6 @@
                 </h2>
               </div>
             </div>
-
           </div>
         </div>
       </div>
@@ -25,8 +24,8 @@
             <section id="shortBlogPosts" class="blog-posts short mt-4">
               <h1>{{ postCategory.name }}</h1>
               <BlogPostsCollection
-                v-if="postCategory.blog_posts?.length"
-                :blogPosts="postCategory.blog_posts"
+                v-if="postCategory.blogPosts?.length"
+                :blogPosts="postCategory.blogPosts"
               />
               <AnimatedDivider />
             </section>
