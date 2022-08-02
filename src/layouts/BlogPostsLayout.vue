@@ -22,12 +22,21 @@
       <template v-if="postCategories.length">
         <template v-for="postCategory in postCategories" :key="postCategory.id">
             <section id="shortBlogPosts" class="blog-posts short mt-4">
+
               <h1>{{ postCategory.name }}</h1>
+
               <BlogPostsCollection
                 v-if="postCategory.blogPosts?.length"
                 :blogPosts="postCategory.blogPosts"
               />
+              <button
+                class="btn btn-danger"
+                @click="loadMorePosts(postCategory.id)">
+                Load more
+              </button>
+
               <AnimatedDivider />
+
             </section>
         </template>
       </template>
@@ -60,12 +69,17 @@ export default defineComponent({
     const store = useStore();
 
     onMounted(async () => {
-      await store.dispatch(Actions.FETCH_POST_CATEGORIES, {});
+      await store.dispatch(Actions.FETCH_POST_CATEGORIES, { limit: 4, limitPosts: 3 });
     });
+
+    const loadMorePosts = (categoryId: number) => {
+      console.log('categoryId', categoryId);
+    };
 
     return {
       postCategories: computed(() => store.getters[Getters.GET_POST_CATEGORIES]),
       postCategoriesError: computed(() => store.getters[Getters.GET_POST_CATEGORIES_ERROR]),
+      loadMorePosts,
     };
   },
 });

@@ -25,7 +25,8 @@ export interface PostCategoryApiResponse extends ApiResponse {
 }
 
 export interface PostCategoryCollectionGetRequestParameters extends GetRequestParameters {
-  includePosts: boolean,
+  includePosts: boolean | null,
+  limitPosts: number | null
 }
 
 export interface PostCategoryState {
@@ -55,9 +56,17 @@ export default {
   actions: {
     [Actions.FETCH_POST_CATEGORIES]({ commit }: any,
       {
-        limit = 6, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includePosts = true,
+        limit = 6, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includePosts = true, limitPosts,
       }: PostCategoryCollectionGetRequestParameters): void {
-      axios.get(`${process.env.VUE_APP_API_URL}/api/posts/categories?orderBy=${orderBy}&sortOrder=${sortOrder}&limit=${limit}&offset=${offset}&include_posts=${includePosts ? 1 : 0}`)
+      axios.get(
+        `${process.env.VUE_APP_API_URL}/api/posts/categories?
+        orderBy=${orderBy}&
+        sortOrder=${sortOrder}&
+        limit=${limit}&
+        offset=${offset}&
+        include_posts=${includePosts ? 1 : 0}&
+        limit_posts=${limitPosts}`,
+      )
         .then(({ data }) => data)
         .then((postCategoriesResponse: PostCategoriesApiResponse): void => {
           const convertedPostCategories = postCategoriesResponse.data.map(
