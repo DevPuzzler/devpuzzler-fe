@@ -13,7 +13,8 @@ export type PostCategory = {
   name: string,
   description: string,
   createdAt: string,
-  blogPosts: Array<BlogPost>
+  blogPosts: Array<BlogPost>,
+  hasCategoryMorePosts: boolean,
 }
 
 export interface PostCategoriesApiResponse extends ApiResponse {
@@ -40,21 +41,32 @@ export default {
     error: null,
   }),
   mutations: {
-    [Mutations.SET_POST_CATEGORIES](state: PostCategoryState, postCategories: []): void {
-      console.log('setpostcategories', postCategories);
+    [Mutations.SET_POST_CATEGORIES](
+      state: PostCategoryState,
+      { postCategories, limitPosts }: unknown,
+    ): void {
       state.postCategories = postCategories.map(
-        (postCategory: PostCategory): PostCategory => <PostCategory>objectKeysCamelCase(
-          postCategory,
-        ),
+        (postCategory: PostCategory): PostCategory => {
+          // eslint-disable-next-line no-param-reassign
+          postCategory.hasCategoryMorePosts = postCategory.blogPosts.length === limitPosts;
+          return <PostCategory>objectKeysCamelCase(postCategory);
+        },
       );
     },
     [Mutations.PUSH_BLOG_POSTS_TO_CATEGORY](
       state: PostCategoryState,
-      { categoryId, blogPosts }: unknown,
+      { categoryId, blogPosts, limitPosts }: unknown,
     ): void {
-      // eslint-disable-next-line no-unused-expressions
-      state.postCategories
-        .find((postCategory) => postCategory.id === categoryId)?.blogPosts.push(...blogPosts);
+      const foundPostCategory = state.postCategories
+        .find((postCategory: PostCategory) => postCategory.id === categoryId);
+
+      if (foundPostCategory) {
+        if (blogPosts.length) {
+          // eslint-disable-next-line no-unused-expressions
+          foundPostCategory.blogPosts.push(...blogPosts);
+        }
+        foundPostCategory.hasCategoryMorePosts = blogPosts.length === limitPosts;
+      }
     },
     [Mutations.SET_POST_CATEGORIES_ERROR](state: PostCategoryState, error: unknown): void {
       console.log('state error', error);
@@ -64,12 +76,12 @@ export default {
   actions: {
     [Actions.FETCH_POST_CATEGORIES]({ commit }: any,
       {
-        limit = 6, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includePosts = true, limitPosts,
+        limit = 6, offset = 0, orderBy = 'created_at', sortOrder = 'desc', includePosts = true, limitPosts = 3,
       }: PostCategoryCollectionGetRequestParameters): void {
       axios.get(
         `${process.env.VUE_APP_API_URL}/api/posts/categories?
         order_by=${orderBy}&
-        sort_rder=${sortOrder}&
+        sort_order=${sortOrder}&
         limit=${limit}&
         offset=${offset}&
         include_posts=${includePosts ? 1 : 0}&
@@ -87,8 +99,10 @@ export default {
               return convertedPostCategory;
             },
           );
-          console.log('convertedPostCategories', convertedPostCategories);
-          commit(Mutations.SET_POST_CATEGORIES, convertedPostCategories);
+          commit(
+            Mutations.SET_POST_CATEGORIES,
+            { postCategories: convertedPostCategories, limitPosts },
+          );
         })
         .catch((response) => {
           console.log('error response short blog posts', response);

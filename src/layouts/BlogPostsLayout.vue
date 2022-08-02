@@ -20,8 +20,8 @@
 
     <template v-else>
       <template v-if="postCategories.length">
-        <template v-for="postCategory in postCategories" :key="postCategory.id">
-            <section id="shortBlogPosts" class="blog-posts short mt-4">
+        <template v-for="(postCategory, index) in postCategories" :key="postCategory.id">
+            <section :id="`postCategory-${postCategory.id}`" class="blog-posts mt-4">
 
               <h1>{{ postCategory.name }}</h1>
 
@@ -30,15 +30,20 @@
                 :blogPosts="postCategory.blogPosts"
               />
 
-              <button
-                v-if="!isLoadingMorePosts"
-                class="btn btn-danger"
-                @click="loadMorePosts(postCategory.id)">
-                Load more
-              </button>
-              <Loader v-else text="Loading more posts..." />
+              <template v-if="postCategory.hasCategoryMorePosts">
+                <Loader
+                  v-if="isLoadingMorePosts && postCategory.id === loadingCategoryId"
+                  :text="`Loading more ${postCategory.name} posts...`"
+                />
+                <button
+                  v-else
+                  class="btn btn-danger"
+                  @click="loadMorePosts(postCategory.id)">
+                  Load more {{ postCategory.name }}
+                </button>
+              </template>
 
-              <AnimatedDivider />
+              <AnimatedDivider v-if="index !== postCategories.length - 1"/>
 
             </section>
         </template>
@@ -71,25 +76,31 @@ export default defineComponent({
   setup() {
     const store = useStore();
     const isLoadingMorePosts = ref<boolean>(false);
+    const loadingCategoryId = ref<number|null>(null);
 
     onMounted(async () => {
       if (!store.getters[Getters.GET_POST_CATEGORIES].length) {
-        await store.dispatch(Actions.FETCH_POST_CATEGORIES, { limit: 4, limitPosts: 3 });
+        await store.dispatch(Actions.FETCH_POST_CATEGORIES, { limit: 6, limitPosts: 3 });
       }
     });
 
     const loadMorePosts = async (categoryId: number) => {
       isLoadingMorePosts.value = true;
-      const blogPosts = await store.dispatch(
+      loadingCategoryId.value = categoryId;
+      const limitPosts = 6;
+
+      await store.dispatch(
         Actions.FETCH_BLOG_POSTS_FOR_CATEGORY,
         {
-          limit: 6,
+          limit: limitPosts,
           categoryId,
           offset: store.getters[Getters.GET_NUMBER_OF_LOADED_POSTS_PER_CATEGORY](categoryId),
         },
-      );
-      store.commit(Mutations.PUSH_BLOG_POSTS_TO_CATEGORY, { categoryId, blogPosts });
-      isLoadingMorePosts.value = false;
+      ).then((blogPosts) => {
+        store.commit(Mutations.PUSH_BLOG_POSTS_TO_CATEGORY, { categoryId, blogPosts, limitPosts });
+        isLoadingMorePosts.value = false;
+        loadingCategoryId.value = null;
+      });
     };
 
     return {
@@ -97,6 +108,7 @@ export default defineComponent({
       postCategoriesError: computed(() => store.getters[Getters.GET_POST_CATEGORIES_ERROR]),
       loadMorePosts,
       isLoadingMorePosts,
+      loadingCategoryId,
     };
   },
 });
