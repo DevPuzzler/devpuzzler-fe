@@ -29,11 +29,14 @@
                 v-if="postCategory.blogPosts?.length"
                 :blogPosts="postCategory.blogPosts"
               />
+
               <button
+                v-if="!isLoadingMorePosts"
                 class="btn btn-danger"
                 @click="loadMorePosts(postCategory.id)">
                 Load more
               </button>
+              <Loader v-else text="Loading more posts..." />
 
               <AnimatedDivider />
 
@@ -50,11 +53,11 @@
 
 <script lang="ts">
 import {
-  computed, defineComponent, onMounted,
+  computed, defineComponent, onMounted, ref,
 } from 'vue';
 import AnimatedDivider from '@/components/Common/AnimatedDivider.vue';
 import BlogPostsCollection from '@/components/BlogPost/BlogPostsCollection.vue';
-import { Actions, Getters } from '@/store/enums/StoreEnums';
+import { Actions, Getters, Mutations } from '@/store/enums/StoreEnums';
 import { useStore } from 'vuex';
 import Loader from '@/components/Common/Loader.vue';
 
@@ -67,19 +70,33 @@ export default defineComponent({
   },
   setup() {
     const store = useStore();
+    const isLoadingMorePosts = ref<boolean>(false);
 
     onMounted(async () => {
-      await store.dispatch(Actions.FETCH_POST_CATEGORIES, { limit: 4, limitPosts: 3 });
+      if (!store.getters[Getters.GET_POST_CATEGORIES].length) {
+        await store.dispatch(Actions.FETCH_POST_CATEGORIES, { limit: 4, limitPosts: 3 });
+      }
     });
 
-    const loadMorePosts = (categoryId: number) => {
-      console.log('categoryId', categoryId);
+    const loadMorePosts = async (categoryId: number) => {
+      isLoadingMorePosts.value = true;
+      const blogPosts = await store.dispatch(
+        Actions.FETCH_BLOG_POSTS_FOR_CATEGORY,
+        {
+          limit: 6,
+          categoryId,
+          offset: store.getters[Getters.GET_NUMBER_OF_LOADED_POSTS_PER_CATEGORY](categoryId),
+        },
+      );
+      store.commit(Mutations.PUSH_BLOG_POSTS_TO_CATEGORY, { categoryId, blogPosts });
+      isLoadingMorePosts.value = false;
     };
 
     return {
       postCategories: computed(() => store.getters[Getters.GET_POST_CATEGORIES]),
       postCategoriesError: computed(() => store.getters[Getters.GET_POST_CATEGORIES_ERROR]),
       loadMorePosts,
+      isLoadingMorePosts,
     };
   },
 });

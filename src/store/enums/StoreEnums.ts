@@ -1,31 +1,23 @@
 /* eslint no-shadow: ["error", { "allow": ["Actions", "Mutations", "Getters"] }] */
 enum Actions {
-  // Blog Posts
-  FETCH_NEWEST_BLOG_POSTS = 'fetchNewestBlogPosts',
-  FETCH_SHORT_BLOG_POSTS = 'fetchShortBlogPosts',
+  FETCH_BLOG_POSTS_FOR_CATEGORY = 'fetchBlogPostsForCategory',
 
   // Post Categories
   FETCH_POST_CATEGORIES = 'fetchPostCategories',
 }
 
 enum Mutations {
-  // Blog Posts
-  SET_NEWEST_BLOG_POSTS = 'setNewestBlogPosts',
-  SET_SHORT_BLOG_POSTS = 'setShortBlogPosts',
-
   // Post Categories
   SET_POST_CATEGORIES = 'setPostCategories',
+  PUSH_BLOG_POSTS_TO_CATEGORY = 'pushBlogPostsToCategory',
   SET_POST_CATEGORIES_ERROR = 'setPostCategoriesError',
 }
 
 enum Getters {
-  // Blog Posts
-  GET_NEWEST_BLOG_POSTS = 'getNewestBlogPosts',
-  GET_SHORT_BLOG_POSTS = 'getShortBlogPosts',
-
   // Post Categories
   GET_POST_CATEGORIES = 'getPostCategories',
   GET_POST_CATEGORIES_ERROR = 'getPostCategoriesError',
+  GET_NUMBER_OF_LOADED_POSTS_PER_CATEGORY = 'getNumberOfLoadedPostsPerCategory',
 }
 
 export { Actions, Mutations, Getters };

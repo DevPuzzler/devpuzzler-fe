@@ -48,6 +48,14 @@ export default {
         ),
       );
     },
+    [Mutations.PUSH_BLOG_POSTS_TO_CATEGORY](
+      state: PostCategoryState,
+      { categoryId, blogPosts }: unknown,
+    ): void {
+      // eslint-disable-next-line no-unused-expressions
+      state.postCategories
+        .find((postCategory) => postCategory.id === categoryId)?.blogPosts.push(...blogPosts);
+    },
     [Mutations.SET_POST_CATEGORIES_ERROR](state: PostCategoryState, error: unknown): void {
       console.log('state error', error);
       state.error = error;
@@ -60,8 +68,8 @@ export default {
       }: PostCategoryCollectionGetRequestParameters): void {
       axios.get(
         `${process.env.VUE_APP_API_URL}/api/posts/categories?
-        orderBy=${orderBy}&
-        sortOrder=${sortOrder}&
+        order_by=${orderBy}&
+        sort_rder=${sortOrder}&
         limit=${limit}&
         offset=${offset}&
         include_posts=${includePosts ? 1 : 0}&
@@ -94,5 +102,8 @@ export default {
         (postCategory: PostCategory) => postCategory.blogPosts?.length,
       );
     },
+    [Getters.GET_NUMBER_OF_LOADED_POSTS_PER_CATEGORY]:
+      (state: PostCategoryState) => (categoryId: number): number | undefined => state.postCategories
+        .find((postCategory) => postCategory.id === categoryId)?.blogPosts.length,
   },
 };
