@@ -62,8 +62,9 @@ import {
 } from 'vue';
 import AnimatedDivider from '@/components/Common/AnimatedDivider.vue';
 import BlogPostsCollection from '@/components/BlogPost/BlogPostsCollection.vue';
-import { Actions, Getters, Mutations } from '@/store/enums/StoreEnums';
+import { Actions, Getters } from '@/store/enums/StoreEnums';
 import { useStore } from 'vuex';
+import useBlogPosts from '@/composables/useBlogPosts';
 import Loader from '@/components/Common/Loader.vue';
 
 export default defineComponent({
@@ -77,6 +78,7 @@ export default defineComponent({
     const store = useStore();
     const isLoadingMorePosts = ref<boolean>(false);
     const loadingCategoryId = ref<number|null>(null);
+    const { loadMoreBlogPostsPerCategory } = useBlogPosts();
 
     onMounted(async () => {
       if (!store.getters[Getters.GET_POST_CATEGORIES].length) {
@@ -87,20 +89,11 @@ export default defineComponent({
     const loadMorePosts = async (categoryId: number) => {
       isLoadingMorePosts.value = true;
       loadingCategoryId.value = categoryId;
-      const limitPosts = 6;
 
-      await store.dispatch(
-        Actions.FETCH_BLOG_POSTS_FOR_CATEGORY,
-        {
-          limit: limitPosts,
-          categoryId,
-          offset: store.getters[Getters.GET_NUMBER_OF_LOADED_POSTS_PER_CATEGORY](categoryId),
-        },
-      ).then((blogPosts) => {
-        store.commit(Mutations.PUSH_BLOG_POSTS_TO_CATEGORY, { categoryId, blogPosts, limitPosts });
-        isLoadingMorePosts.value = false;
-        loadingCategoryId.value = null;
-      });
+      await loadMoreBlogPostsPerCategory(categoryId, 6);
+
+      isLoadingMorePosts.value = false;
+      loadingCategoryId.value = null;
     };
 
     return {
