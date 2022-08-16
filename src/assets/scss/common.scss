@@ -4,3 +4,17 @@
   min-height: 100vh;
 }
 
+#footer {
+  border-top: 1px solid white;
+
+  .footer-title {
+    font-weight: bold;
+    color: $white-color;
+    font-size: clamp(1.1rem, calc(4vw + .1rem), 1.8rem);
+    text-transform: uppercase;
+  }
+}
+
+.scale-hover:hover {
+  transform: scale(1.2);
+}
