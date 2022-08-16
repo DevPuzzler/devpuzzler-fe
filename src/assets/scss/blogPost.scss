@@ -1,59 +1,47 @@
-.blog-posts {
+section.blog-posts {
+  .blog-post {
+    .card {
+      background: black;
+      .card-img-top {
+        max-height: 200px;
+      }
 
-  h2.title {
-    &:after {
-      display: block;
-      content: '';
-      border-bottom: solid 3px $light-blue-color;
-      transform: scaleX(0);
-      transition: transform 250ms ease-in-out;
-      margin-top: 10px;
-    }
- }
-
-  &:hover {
-    h2.title:after {
-      transform: scaleX(1);
-    }
-  }
-
-  .container {
-    .row {
-      .card.post {
-        perspective: 1000px;
-        min-height: 320px;
-
-        .card-body {
-          transition: transform 0.8s;
-          transform-style: preserve-3d;
-
-          .card-front, .card-back {
-            -webkit-backface-visibility: hidden; /* Safari */
-            backface-visibility: hidden;
-
-            .card-title {
-              font-size: 1.5rem;
-            }
-          }
-
-          /* Style the back side */
-          .card-back {
-            transform: rotateY(180deg);
-          }
-
-          img.card-img-top {
-            max-height: 200px;
-          }
+      .card-body {
+        .card-title, .card-text {
+          text-decoration: none;
         }
 
-        &:hover .card-body {
-          transform: rotateY(180deg);
+        .card-title {
+          font-weight: bold;
+          color: $orange-color;
+          font-size: clamp(1.1rem, calc(4vw + .1rem), 1.8rem);
+        }
+
+        .card-text {
+          font-size: clamp(0.8rem, calc(3vw + .1rem) , 1.1rem);
+          color: white;
+        }
+      }
+
+      .card-footer {
+        border: none;
+        small.text-muted {
+          font-size: clamp(0.5rem, calc(3vw + .1rem) , 0.9rem);
+          font-weight: bold;
         }
       }
     }
   }
-}
 
+  button.btn-load-more {
+    background: $orange-color;
+    padding: 10px 15px;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
 .blog-post {
   &__title {
     color: $orange-color;

@@ -21,7 +21,7 @@
     <template v-else>
       <template v-if="postCategories.length">
         <template v-for="(postCategory, index) in postCategories" :key="postCategory.id">
-            <section :id="`postCategory-${postCategory.id}`" class="blog-posts mt-4">
+            <section :id="`postCategory-${postCategory.id}`" class="blog-posts mt-4 container">
 
               <h1>{{ postCategory.name }}</h1>
 
@@ -37,13 +37,13 @@
                 />
                 <button
                   v-else
-                  class="btn btn-danger"
+                  class="btn mt-5 btn-load-more"
                   @click="loadMorePosts(postCategory.id)">
-                  Load more {{ postCategory.name }}
+                  <b>Load more {{ postCategory.name }}</b>
                 </button>
               </template>
 
-              <AnimatedDivider v-if="index !== postCategories.length - 1"/>
+              <AnimatedDivider class="mt-5" v-if="index !== postCategories.length - 1"/>
 
             </section>
         </template>
@@ -95,7 +95,6 @@ export default defineComponent({
       isLoadingMorePosts.value = false;
       loadingCategoryId.value = null;
     };
-
     return {
       postCategories: computed(() => store.getters[Getters.GET_POST_CATEGORIES]),
       postCategoriesError: computed(() => store.getters[Getters.GET_POST_CATEGORIES_ERROR]),

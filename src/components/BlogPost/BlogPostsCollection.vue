@@ -1,15 +1,13 @@
 <template>
-  <template v-if="blogPosts?.length">
-    <div class="container d-flex flex-column">
-      <div class="row flex-wrap justify-content-center">
-        <BlogPost
-            v-for="blogPost in blogPosts"
-            :blogPost="blogPost"
-            :key="blogPost.id"
-          />
-      </div>
-    </div>
-  </template>
+  <div class="row row-cols-lg-3 row-cols-md-2 row-cols-1 g-4 blog-post">
+    <template v-if="blogPosts?.length">
+      <BlogPost
+        v-for="blogPost in blogPosts"
+        :blogPost="blogPost"
+        :key="blogPost.id"
+      />
+    </template>
+  </div>
 </template>
 
 <script lang="ts">

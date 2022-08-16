@@ -63,7 +63,7 @@ export default {
       if (foundPostCategory) {
         if (blogPosts.length) {
           // eslint-disable-next-line no-unused-expressions
-          foundPostCategory.blogPosts.push(...blogPosts);
+          foundPostCategory.blogPosts.push(...<BlogPost[]>objectsArrayKeysCamelCase(blogPosts));
         }
         foundPostCategory.hasCategoryMorePosts = blogPosts.length === limitPosts;
       }
