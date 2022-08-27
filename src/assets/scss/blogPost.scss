@@ -36,6 +36,8 @@ section.blog-posts {
   button.btn-load-more {
     background: $orange-color;
     padding: 10px 15px;
+    color: white;
+    text-shadow: 1px 0px 10px black;
 
     &:hover {
       transform: scale(1.1);

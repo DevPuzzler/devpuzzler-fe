@@ -12,7 +12,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
-import BlogPost from '@/components/BlogPost/BlogPost.vue';
+import BlogPost from '@/components/BlogPost/BlogPostListItem.vue';
 
 export default defineComponent({
   name: 'blog-posts-collection',

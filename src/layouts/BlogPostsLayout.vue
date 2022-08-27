@@ -23,7 +23,7 @@
         <template v-for="(postCategory, index) in postCategories" :key="postCategory.id">
             <section :id="`postCategory-${postCategory.id}`" class="blog-posts mt-4 container">
 
-              <h1 class="mb-5">{{ postCategory.name }}</h1>
+              <h1 class="mb-5 text-white">{{ postCategory.name }}</h1>
 
               <BlogPostsCollection
                 v-if="postCategory.blogPosts?.length"
@@ -39,7 +39,7 @@
                   v-else
                   class="btn mt-5 btn-load-more"
                   @click="loadMorePosts(postCategory.id)">
-                  <b>Load more {{ postCategory.name }}</b>
+                  <b>Load more {{ postCategory.name }} posts</b>
                 </button>
               </template>
 

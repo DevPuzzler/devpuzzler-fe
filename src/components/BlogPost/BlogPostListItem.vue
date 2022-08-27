@@ -25,9 +25,9 @@ export default defineComponent({
     blogPost: Object,
   },
   setup() {
-    const displayDate = (createdAt: Date) => {
-      return new Date(createdAt).toISOString().split('T')[0];
-    };
+    const displayDate = (createdAt: Date) => new Date(createdAt)
+      .toISOString()
+      .split('T')[0];
 
     return {
       displayDate,
